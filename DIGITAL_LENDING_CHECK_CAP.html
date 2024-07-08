@@ -1,0 +1,85 @@
+
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Form with Bootstrap</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Nhập thông tin</h2>
+        <form id="apiForm">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" value="" required>
+            </div>
+            <div class="form-group">
+                <label for="cuid">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" value="" required>
+            </div>
+            <div class="form-group">
+                <label for="cuid">CUID:</label>
+                <input type="text" class="form-control" id="cuid" name="cuid" value="17476678" required>
+            </div>
+            <div class="form-group">
+                <label for="contractNumber">Contract Number:</label>
+                <input type="text" class="form-control" id="contractNumber" name="contractNumber" value="4401705190" required>
+            </div>
+            <div class="form-group">
+                <label for="transactionAmount">Transaction Amount:</label>
+                <input type="text" class="form-control" id="transactionAmount" name="transactionAmount"  value="110000000" required>
+            </div>
+            <div class="form-group">
+                <label for="productProfile">Product Profile:</label>
+                <input type="text" class="form-control" id="productProfile" name="productProfile">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <div id="result" class="mt-4"></div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('#apiForm').submit(function(event){
+                event.preventDefault();
+                
+                var formData = {
+                    cuid: $('#cuid').val(),
+                    contractNumber: $('#contractNumber').val(),
+                    transactionAmount: $('#transactionAmount').val(),
+                    productProfile: $('#productProfile').val()
+                };
+
+                var username = $('#username').val(); // Thay bằng username của bạn
+                var password = $('#password'); // Thay bằng password của bạn
+                var basicAuth = 'Basic ' + btoa(username + ':' + password);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'https://api-dev.homecredit.vn/dlc/v1/digital-lending-cap/check-cap', // Thay YOUR_API_ENDPOINT_URL bằng URL của API
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': basicAuth,
+						'Access-Control-Allow-Origin': '*',
+						'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+						'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+                    },
+                    success: function(response){
+                        $('#result').html('<div class="alert alert-success">API call thành công: ' + JSON.stringify(response) + '</div>');
+                    },
+                    error: function(xhr, status, error){
+                        var errorMessage = 'Lỗi khi gọi API: ' + xhr.status + ' ' + xhr.statusText;
+                        $('#result').html('<div class="alert alert-danger">' + errorMessage + '</div>');
+                    }
+                });
+            });
+        });
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
